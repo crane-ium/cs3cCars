@@ -18,3 +18,12 @@ def agents(count):
             "service_time": random.randint(3, 5),
             "rating": round(random.random(), 3)
         }
+
+def create_agents_list(count):
+    """
+    Takes the generator for agents and puts it into a list that is returned
+    """
+    agents_list = []
+    for agent in agents(count):
+        agents_list.append(agent)
+    return agents_list
