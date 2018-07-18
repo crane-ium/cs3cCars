@@ -19,7 +19,7 @@ def agents(count):
             "rating": round(random.random(), 3)
         }
 
-def create_agents_list(count):
+def createAgentsList(count):
     """
     Takes the generator for agents and puts it into a list that is returned
     """

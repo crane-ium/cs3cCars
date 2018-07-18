@@ -26,3 +26,9 @@ def customers(count):
         }
         if next_time.hour > 17:
             next_time = next_time.replace(day=next_time.day + 1, hour=8)
+
+def createCustomersList(count):
+    customer_list = []
+    for customer in customers(count):
+        customer_list.append(customer)
+    return customer_list
