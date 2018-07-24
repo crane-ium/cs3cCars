@@ -1,9 +1,8 @@
 """
 Car sales.
 """
-from datetime import datetime
 from dealer.agent import Agent
-from data.customers import customers,create_customers_list
+from data.customers import create_customers_list
 
 class Run(object):
     """
@@ -13,18 +12,19 @@ class Run(object):
     def sales(self):
         """
         Loop through customers to determine how the agents did.
-        Alter the agents object
         """
-        agent_list = Agent(5)
-        customers_ = create_customers_list(100)
+        agent_num = 5
+        customer_num = 100
+        agents = Agent(agent_num)
+        customers_ = create_customers_list(customer_num)
         for customer in customers_:
-            agent = agent_list.get_agent(customer)
-            agent_list.check_deal(agent,customer)
-        print(__name__)
-        print(agent_list)
-        
+            agent = agents.get_agent(customer)
+            agents.check_deal(agent, customer)
+        print(agents)
+        print(agents.wait_minutes)
 
 
 if __name__ == "__main__":
     run = Run()
     run.sales()
+    

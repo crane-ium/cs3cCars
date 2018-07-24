@@ -1,9 +1,9 @@
 """
 Agent object.
 """
+import statistics
 from datetime import datetime, timedelta
 from data.agents import agents
-from data.customers import customers
 from data import CARS
 from dealer import COLUMNS, SPACING
 
@@ -20,7 +20,7 @@ class Agent(object):
         For this project it SHOULD be 5 agents
         """
         self.agent_list = Agent.create_agents_list(agent_count)
-        self.wait_minutes = 0
+        self.wait_minutes = []
 
     def __str__(self):
         """
@@ -33,33 +33,19 @@ class Agent(object):
         output += "\n"
         for agent in self.agent_list:
             deal_ratio = (str(agent['deals']).ljust(2)
-                    + " of " 
-                    + str(agent['deals_attempted']).ljust(2))
+                        + " of " 
+                        + str(agent['deals_attempted']).ljust(2))
             bonus = "100000" if agent['bonus'] else "0"
             output += f"{agent['agent']['agent_id']:<{SPACING}}"
             output += f"{deal_ratio:<{SPACING}}"
             output += f"{agent['revenue']:<{SPACING}}"
             output += f"{agent['commission']:<{SPACING}}"
             output += f"{bonus:<{SPACING}}\n"
+        output += f"{'-' * 10}Wait Time{'-' * 10}\n"
+        output += f"Mean: {statistics.mean(self.wait_minutes):.4}\n"
+        output += f"Median: {int(statistics.median(self.wait_minutes))}\n"
+        output += f"Std deviation: {statistics.stdev(self.wait_minutes):.4}\n"
         return output
-
-    def __getitem__(self, index):
-        """
-        Return an agent dictionary from agent_list index
-        """
-        def __str__(self):
-            """
-            Returns tabular format of agents
-            """
-            pass
-        pass
-
-    def __iter__(self):
-        """
-        Instead of accessing agents by index through __getitem__, you can iterate through
-        the agents
-        """
-        pass
     
     def get_agent(self,customer):
         """
@@ -71,7 +57,7 @@ class Agent(object):
             soonest_agent = min(self.agent_list,key=lambda k: k['time'])
             minutes = (soonest_agent['time'] - customer['arrival_time']).total_seconds() / 60
             if minutes > 0: #Which should always be true at this point
-                self.wait_minutes += minutes
+                self.wait_minutes.append(int(minutes))
             else:
                 raise ValueError
             _time = soonest_agent['time'] + timedelta(
@@ -117,8 +103,7 @@ class Agent(object):
             if agent['agent']['agent_id'] == agent_['agent']['agent_id']:
                 self.agent_list[index] = agent
                 return self.agent_list[index]
-        else:
-            raise IndexError
+        raise IndexError
 
     @classmethod
     def get(cls, customer):
@@ -156,4 +141,3 @@ class Agent(object):
                 'deals_attempted':0,
             })
         return agents_list
-

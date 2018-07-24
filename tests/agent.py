@@ -57,6 +57,16 @@ class TestAgent(unittest.TestCase):
     def testStr(self):
         agents = Agent(5)
         self.assertIsInstance(str(agents),str)
+    def testOneHundredTotalDealsAttempted(self):
+        agents = Agent(5)
+        customers_ = create_customers_list(100)
+        for customer in customers_:
+            agent = agents.get_agent(customer)
+            agents.check_deal(agent,customer)
+        deals_attempted = 0
+        for agent in agents.agent_list:
+            deals_attempted += agent['deals_attempted']
+        self.assertEqual(deals_attempted,100)
 
 if __name__ == "__main__":
     unittest.main()
