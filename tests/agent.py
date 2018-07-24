@@ -2,6 +2,7 @@
 Unit tests for agent module.
 """
 import unittest
+import copy
 from data.agents import *
 from data.customers import *
 from dealer.agent import *
@@ -24,7 +25,7 @@ class TestAgent(unittest.TestCase):
     def testAgent(self):
         agents = Agent.create_agents_list(5)
         self.assertEqual(len(agents),5)
-        self.assertEqual(len(agents[0].items()),4)
+        self.assertEqual(len(agents[0].items()),7)
         self.assertEqual(len(agents[0]['agent'].items()),4)
     def testGetAgent(self):
         agents = Agent(5)
@@ -46,6 +47,16 @@ class TestAgent(unittest.TestCase):
         print(arrival_time)
         print(f"Newest time {agents.agent_list[0]['time']}")
         self.assertEqual(agent['agent'],agents.agent_list[0]['agent'])
+    def testCheckDeal(self):
+        agents = Agent(5)
+        agents_copy = copy.deepcopy(agents)
+        customers = create_customers_list(100)
+        current_agent = agents.get_agent(customers[0])
+        updated_agent = agents.check_deal(current_agent, customers[0])
+        self.assertIn(updated_agent,agents.agent_list)
+    def testStr(self):
+        agents = Agent(5)
+        self.assertIsInstance(str(agents),str)
 
 if __name__ == "__main__":
     unittest.main()

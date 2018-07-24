@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from data.agents import agents
 from data.customers import customers
 from data import CARS
+from dealer import COLUMNS, SPACING
 
 AGENT_COUNT = 5
 
@@ -26,7 +27,21 @@ class Agent(object):
         Creates a string to output for Agent object
         Puts it into a tabular format
         """
-        pass
+        output = ''
+        for string in COLUMNS:
+            output += string.ljust(SPACING)
+        output += "\n"
+        for agent in self.agent_list:
+            deal_ratio = (str(agent['deals']).ljust(2)
+                    + " of " 
+                    + str(agent['deals_attempted']).ljust(2))
+            bonus = "100000" if agent['bonus'] else "0"
+            output += f"{agent['agent']['agent_id']:<{SPACING}}"
+            output += f"{deal_ratio:<{SPACING}}"
+            output += f"{agent['revenue']:<{SPACING}}"
+            output += f"{agent['commission']:<{SPACING}}"
+            output += f"{bonus:<{SPACING}}\n"
+        return output
 
     def __getitem__(self, index):
         """
@@ -61,14 +76,14 @@ class Agent(object):
                 raise ValueError
             _time = soonest_agent['time'] + timedelta(
                     hours=soonest_agent['agent']['service_time'])
-            self.set_agent_time(soonest_agent,_time)
+            soonest_agent = self.set_agent_time(soonest_agent,_time)
             return soonest_agent
         #Second, return the best available agent
         _customer_car = customer['interest']
         best_agent = max(available_agents, key=lambda k: k['agent']['expertise'][_customer_car])
         _time = customer['arrival_time'] + timedelta(
                 hours=best_agent['agent']['service_time'])
-        self.set_agent_time(best_agent,_time)
+        best_agent = self.set_agent_time(best_agent,_time)
         return best_agent
 
     def set_agent_time(self, agent, time):
@@ -78,8 +93,32 @@ class Agent(object):
         for index, agent_ in enumerate(self.agent_list):
             if agent_ == agent:
                 self.agent_list[index]['time'] = time
-                break
+                return self.agent_list[index]
 
+    def check_deal(self,agent,customer):
+        """
+        Changes Agent's deal statistics according to the customer
+        """ 
+        if customer['sale_closed'] == True:        
+            agent['commission'] += 10000
+            agent['deals'] += 1
+            agent['revenue'] += CARS[customer['interest']]['price']
+            if agent['commission'] >= 100000:
+                agent['bonus'] = True
+        agent['deals_attempted'] += 1
+        updated_agent = self.set_agent(agent)
+        return updated_agent
+
+    def set_agent(self,agent):
+        """
+        Updates the agent with most recent statistics
+        """
+        for index, agent_ in enumerate(self.agent_list):
+            if agent['agent']['agent_id'] == agent_['agent']['agent_id']:
+                self.agent_list[index] = agent
+                return self.agent_list[index]
+        else:
+            raise IndexError
 
     @classmethod
     def get(cls, customer):
@@ -110,8 +149,11 @@ class Agent(object):
             agents_list.append({
                 'agent':agent,
                 'time': datetime(_today.year, _today.month, _today.day, 8),
-                'deals':0,
+                'commission':0,
                 'revenue':0,
+                'bonus':False,
+                'deals':0,
+                'deals_attempted':0,
             })
         return agents_list
 
