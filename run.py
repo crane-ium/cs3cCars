@@ -15,16 +15,14 @@ class Run(object):
         """
         agent_num = 5
         customer_num = 100
-        agents = Agent(agent_num)
+        agents = Agent.get()
         customers_ = create_customers_list(customer_num)
         for customer in customers_:
             agent = agents.get_agent(customer)
             agents.check_deal(agent, customer)
         print(agents)
-        print(agents.wait_minutes)
 
 
 if __name__ == "__main__":
     run = Run()
     run.sales()
-    

@@ -106,21 +106,11 @@ class Agent(object):
         raise IndexError
 
     @classmethod
-    def get(cls, customer):
+    def get(cls):
         """
-        Assign the best agent for the customer, creating an instance if necessary.
-        Return the agent and wait time (0 if an agent is readily available).
-            - customer: Info of customer.
+        Creates a class method with default amount of agents of five
         # """
-        # best_agent = None
-        # #First find best agent, and if none, go next step
-        # best_agent = max(cls.agent_list,)
-        # #Second, find the soonest agent for the customer
-        if not isinstance(cls, Agent):
-            agent = cls(5)
-            return agent.get_agent(customer)
-        else:
-            return cls.get_agent(customer)
+        return cls(5)
 
     @staticmethod
     def create_agents_list(count: int):
