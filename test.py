@@ -4,7 +4,6 @@ All unit tests.
 import unittest
 from tests import agent
 
-
 MDOULES = [
     agent
 ]
