@@ -48,8 +48,6 @@ class Agent(object):
         elif len(self.wait_minutes) == 0:
             output += "No wait time"
             return output
-        else:
-            raise IndexError
         output += f"Mean: {statistics.mean(self.wait_minutes):.4}\n"
         output += f"Median: {int(statistics.median(self.wait_minutes))}\n"
         output += f"Std deviation: {statistics.stdev(self.wait_minutes):.4}\n"
