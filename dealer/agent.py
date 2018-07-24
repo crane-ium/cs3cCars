@@ -116,7 +116,11 @@ class Agent(object):
         # #First find best agent, and if none, go next step
         # best_agent = max(cls.agent_list,)
         # #Second, find the soonest agent for the customer
-        pass
+        if not isinstance(cls, Agent):
+            agent = cls(5)
+            return agent.get_agent(customer)
+        else:
+            return cls.get_agent(customer)
 
     @staticmethod
     def create_agents_list(count: int):
