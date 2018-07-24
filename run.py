@@ -13,7 +13,6 @@ class Run(object):
         """
         Loop through customers to determine how the agents did.
         """
-        agent_num = 5
         customer_num = 100
         agents = Agent.get()
         customers_ = create_customers_list(customer_num)

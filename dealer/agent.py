@@ -42,6 +42,14 @@ class Agent(object):
             output += f"{agent['commission']:<{SPACING}}"
             output += f"{bonus:<{SPACING}}\n"
         output += f"{'-' * 10}Wait Time{'-' * 10}\n"
+        if len(self.wait_minutes) == 1:
+            output += f"Only one wait time: {self.wait_minutes[0]}"
+            return output
+        elif len(self.wait_minutes) == 0:
+            output += "No wait time"
+            return output
+        else:
+            raise IndexError
         output += f"Mean: {statistics.mean(self.wait_minutes):.4}\n"
         output += f"Median: {int(statistics.median(self.wait_minutes))}\n"
         output += f"Std deviation: {statistics.stdev(self.wait_minutes):.4}\n"
